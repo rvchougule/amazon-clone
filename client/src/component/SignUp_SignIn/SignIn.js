@@ -1,13 +1,18 @@
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 import "./sign-in-up.css";
 import { NavLink } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { LoginContext } from "../context/ContextProvider";
 
 const SignIn = () => {
   const [logdata, setData] = useState({
     email: "",
     password: "",
   });
-//   console.log(logdata);
+  //   console.log(logdata);
+  const { account, setAccount } = useContext(LoginContext);
+  
   const adddata = (e) => {
     const { name, value } = e.target;
 
@@ -19,6 +24,52 @@ const SignIn = () => {
     });
   };
 
+  const sendData = async (e) => {
+    e.preventDefault();
+
+    const {email, password} = logdata;
+    const res = await fetch("/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email, password
+      }),
+    });
+
+    const data = await res.json();
+    console.log(data);
+
+    if(res.status === 400 || !data){
+      toast.warn("Invalid Details ", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }else{
+      setAccount(data)
+      toast.success("Login Successful", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      setData({...logdata,email:"",password:""});
+    }
+
+
+  };
+
   return (
     <>
       <section>
@@ -27,7 +78,7 @@ const SignIn = () => {
             <img src="./blacklogoamazon.png" alt="" />
           </div>
           <div className="sign_form">
-            <form>
+            <form method="POST">
               <h1>Sign-In</h1>
               <div className="form_data">
                 <label htmlFor="email">Email</label>
@@ -50,7 +101,9 @@ const SignIn = () => {
                   id="password"
                 />
               </div>
-              <button className="signin_btn">Continue</button>
+              <button className="signin_btn" onClick={sendData}>
+                Continue
+              </button>
             </form>
           </div>
           <div className="create_accountinfo">
@@ -60,6 +113,7 @@ const SignIn = () => {
             </NavLink>
           </div>
         </div>
+        <ToastContainer/>
       </section>
     </>
   );

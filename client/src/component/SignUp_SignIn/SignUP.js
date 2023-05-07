@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "./sign-in-up.css";
 import { NavLink } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SignUP = () => {
   const [udata, setUdata] = useState({
@@ -10,18 +12,84 @@ const SignUP = () => {
     password: "",
     cpassword: "",
   });
-//   console.log(udata)
+  //   console.log(udata)
   const adddata = (e) => {
     const { name, value } = e.target;
 
-    setUdata(()=>{
-        return{
-            ...udata,
-            [name]: value
-        }
-    })
+    setUdata(() => {
+      return {
+        ...udata,
+        [name]: value,
+      };
+    });
   };
 
+  const sendData = async (e) => {
+    e.preventDefault();
+
+    const { fname, email, mobile, password, cpassword } = udata;
+    if (
+      fname === "" ||
+      email === "" ||
+      mobile === "" ||
+      password === "" ||
+      cpassword === ""
+    ) {
+      toast.warn("Please Provide All the Data ", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } else {
+      const res = await fetch("register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fname,
+          email,
+          mobile,
+          password,
+          cpassword,
+        }),
+      });
+
+      const data = await res.json();
+      // console.log(data);
+
+      if (res.status === 422 || !data) {
+        // alert("Registration failed");
+        toast.warn("Registration failed", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } else {
+        // alert("Registered Successfully ");
+        toast.success("Registered Successfully", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+    }
+  };
   return (
     <>
       <section>
@@ -30,7 +98,7 @@ const SignUP = () => {
             <img src="./blacklogoamazon.png" alt="" />
           </div>
           <div className="sign_form">
-            <form>
+            <form method="POST">
               <h1>Sign-Up</h1>
               <div className="form_data">
                 <label htmlFor="fname">Your Name</label>
@@ -82,13 +150,16 @@ const SignUP = () => {
                   id="cpassword"
                 />
               </div>
-              <button className="signin_btn">Continue</button>
+              <button className="signin_btn" onClick={sendData}>
+                Continue
+              </button>
               <div className="signin_info">
                 <p>Already Have an account?</p>
                 <NavLink to="/login">Sign In</NavLink>
               </div>
             </form>
           </div>
+          <ToastContainer />
         </div>
       </section>
     </>
