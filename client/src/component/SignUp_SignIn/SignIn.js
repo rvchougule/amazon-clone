@@ -1,17 +1,20 @@
 import React, { useState,useContext } from "react";
 import "./sign-in-up.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { LoginContext } from "../context/ContextProvider";
 
 const SignIn = () => {
+  const history = useNavigate();
   const [logdata, setData] = useState({
     email: "",
     password: "",
   });
   //   console.log(logdata);
+  // eslint-disable-next-line no-unused-vars
   const { account, setAccount } = useContext(LoginContext);
+  
   
   const adddata = (e) => {
     const { name, value } = e.target;
@@ -65,6 +68,7 @@ const SignIn = () => {
         theme: "light",
       });
       setData({...logdata,email:"",password:""});
+      history("/")
     }
 
 

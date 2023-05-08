@@ -86,18 +86,18 @@ router.post("/login", async (req, res) => {
       const isMatch = await bcrypt.compare(password, userlogin.password);
       // console.log(isMatch);
 
-      // token generate
-      const token = await userlogin.generateAuthToken();
-      // console.log(token);
-
-      res.cookie("Amazonweb", token, {
-        expires: new Date(Date.now() + 900000),
-        httpOnly: true,
-      });
-
       if (!isMatch) {
         res.status(400).json({ error: "Invalid Details" });
       } else {
+        // token generate
+        const token = await userlogin.generateAuthToken();
+        // console.log(token);
+
+        res.cookie("Amazonweb", token, {
+          expires: new Date(Date.now() + 900000),
+          httpOnly: true,
+        });
+
         res.status(201).json(userlogin);
       }
     } else {
@@ -165,10 +165,26 @@ router.delete("/remove/:id", authenticate, async (req, res) => {
     req.rootUser.save();
     res.status(201).json(req.rootUser);
     console.log("item removed successfully");
-
   } catch (error) {
-    console.log("error"+error);
+    console.log("error" + error);
     res.status(400).json(req.rootUser);
+  }
+});
+
+// for User Logout
+
+router.get("/logout", authenticate, (req, res) => {
+  try {
+    req.rootUser.tokens = req.rootUser.tokens.filter((curelem) => {
+      return curelem.token !== req.token;
+    });
+
+    res.clearCookie("Amazonweb", { path: "/" });
+    req.rootUser.save();
+    res.status(201).json(req.rootUser.tokens);
+    console.log("user Logout");
+  } catch (error) {
+    console.log("error for user logout");
   }
 });
 

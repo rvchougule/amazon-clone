@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import "./sign-in-up.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const SignUP = () => {
+  const history = useNavigate();
+
   const [udata, setUdata] = useState({
     fname: "",
     email: "",
@@ -87,6 +89,7 @@ const SignUP = () => {
           progress: undefined,
           theme: "light",
         });
+        history("/login")
       }
     }
   };

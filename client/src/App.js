@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import Navbar from "./component/Header/Navbar";
 import NewNavbar from "./component/NewNavbar/NewNavbar";
@@ -9,22 +9,40 @@ import SignUP from "./component/SignUp_SignIn/SignUP";
 import { Routes, Route } from "react-router-dom";
 import Cart from "./component/cart/Cart";
 import Buynow from "./component/buynow/Buynow";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function App() {
+  const [data, setData] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setData(true);
+    }, 2000);
+  }, []);
+
   return (
     <>
-      <Navbar />
-      <NewNavbar />
-      <Routes>
-        <Route path="/" element={<MainComponent />} />
-        <Route path="login" element={<SignIn />} />
-        <Route path="register" element={<SignUP />} />
-        <Route path="/getproductsone/:id" element={<Cart/>} />
-        <Route path="/buynow" element={<Buynow/>} />
-      </Routes>
-      <Footer />
+      {data ? (
+        <>
+          <Navbar />
+          <NewNavbar />
+          <Routes>
+            <Route path="/" element={<MainComponent />} />
+            <Route path="login" element={<SignIn />} />
+            <Route path="register" element={<SignUP />} />
+            <Route path="/getproductsone/:id" element={<Cart />} />
+            <Route path="/buynow" element={<Buynow />} />
+          </Routes>
+          <Footer />
+        </>
+      ) : (
+        <div className="circle">
+          <CircularProgress/>
+          <h2>Loading...</h2>
+        </div>
+      )}
     </>
-  ); 
+  );
 }
 
 export default App;
