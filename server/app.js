@@ -17,7 +17,12 @@ app.use(cors());
 app.use(router);
 
 
-const port = 8009;
+const port = process.env.PORT || 8005;
+
+// for deployment purposes
+if(process.env.NODE_ENV === "production"){
+  app.use(express.static("client/build"))
+}
 
 app.listen(port, () => {
   console.log(`server is running at ${port}`);
