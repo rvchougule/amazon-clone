@@ -4,6 +4,8 @@ import { Divider } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { LoginContext } from "../context/ContextProvider";
 import CircularProgress from "@mui/material/CircularProgress";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Cart = () => {
   const { id } = useParams(" ");
@@ -35,7 +37,7 @@ const Cart = () => {
   };
 
   useEffect(() => {
-    setTimeout(getIndividualData,1000);
+    setTimeout(getIndividualData, 1000);
   });
 
   // // Add cart function
@@ -51,17 +53,37 @@ const Cart = () => {
       }),
       credentials: "include",
     });
-    console.log(checkres.status + "checkres");
+    // console.log(checkres.status + "checkres");
 
     const data1 = await checkres.json();
-    console.log(data1 + "frontend data");
+    // console.log(data1 + "frontend data");
 
     if (checkres.status === 401 || !data1) {
-      alert("User Invalid");
-      console.log("User Invalid");
+      // alert("User Invalid");
+      // console.log("User Invalid");
+      toast.warn("User Invalid ", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     } else {
       // alert("data added in your cart");
-      history("/buynow")
+      toast.success("Item Added in your Cart ", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      history("/buynow");
       setAccount(data1);
     }
   };
@@ -76,11 +98,20 @@ const Cart = () => {
               <div className="cart_btn">
                 <button
                   className="cart_btn1"
-                  onClick={() => addtocart(individualData.id)}
+                  onClick={() => {
+                    account ? addtocart(individualData.id) : history("/login");
+                  }}
                 >
                   Add to Cart
                 </button>
-                <button className="cart_btn2">Buy Now</button>
+                <button
+                  className="cart_btn2"
+                  onClick={() => {
+                    account ? history("/buynow") : history("/login");
+                  }}
+                >
+                  Buy Now
+                </button>
               </div>
             </div>
             <div className="right_cart">
@@ -135,14 +166,16 @@ const Cart = () => {
             </div>
           </div>
         )}
-        {
-        !individualData ? <div className="circle">
-          <CircularProgress/>
-          <h2>Loading...</h2>
-        </div>:""
-      }
+        {!individualData ? (
+          <div className="circle">
+            <CircularProgress />
+            <h2>Loading...</h2>
+          </div>
+        ) : (
+          ""
+        )}
+        <ToastContainer />
       </div>
-      
     </>
   );
 };

@@ -197,6 +197,9 @@ header nav .drawer{
         background-color: #131921; */
         display: none;
     }
+    header nav .right .avatar , .avatar2{
+        display:none;
+    }
     header nav .navlogo img{
         width: 95px;
         margin-top: 14px;

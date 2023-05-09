@@ -4,8 +4,10 @@ import Avatar from "@mui/material/Avatar";
 import { LoginContext } from "../context/ContextProvider";
 import { NavLink } from "react-router-dom";
 import { Divider } from "@mui/material";
+import LogoutIcon from "@mui/icons-material/Logout";
 
-const RightHeader = ({ LogClose }) => {
+const RightHeader = ({ LogClose, logOutUser }) => {
+  // eslint-disable-next-line no-unused-vars
   const { account, setAccount } = useContext(LoginContext);
   return (
     <>
@@ -37,8 +39,24 @@ const RightHeader = ({ LogClose }) => {
 
           <div className="flag">
             <NavLink to="/">Settings</NavLink>
-            <img src="" alt="" />
+            <img src="./india.png" style={{width:35,marginLeft:10}} alt="" />
           </div>
+          {account ? (
+            <div className="flag">
+              <LogoutIcon
+                style={{ fontSize: 18, marginRight: 4 }}
+                onClick={() => logOutUser()}
+              />
+              <h3
+                style={{ cursor: "pointer", fontWeight: 500 }}
+                onClick={() => logOutUser()}
+              >
+                Logout
+              </h3>
+            </div>
+          ) : (
+            <NavLink to="/login">SignIN</NavLink>
+          )}
         </div>
       </div>
     </>

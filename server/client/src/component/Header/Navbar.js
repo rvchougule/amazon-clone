@@ -12,13 +12,12 @@ import { LoginContext } from "../context/ContextProvider";
 import RightHeader from "./RightHeader";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import LogoutIcon from '@mui/icons-material/Logout';
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import LogoutIcon from "@mui/icons-material/Logout";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {useSelector} from "react-redux"
-
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
   const { account, setAccount } = useContext(LoginContext);
@@ -34,10 +33,10 @@ const Navbar = () => {
     setAnchorEl(null);
   };
 
-  const [text,setText] = useState("");
+  const [text, setText] = useState("");
   console.log(text);
-  const [liopen,setLiopen] = useState(true);
-  const { products } = useSelector(state => state.getProductsdata);
+  const [liopen, setLiopen] = useState(true);
+  const { products } = useSelector((state) => state.getProductsdata);
 
   const [dropen, setDropen] = useState(false);
 
@@ -98,19 +97,19 @@ const Navbar = () => {
         theme: "light",
       });
       setAccount(false);
-      history("/")
+      history("/");
     }
   };
 
-  const logfunctions = ()=>{
-    handleClose()
-    logOutUser()
-  }
+  const logfunctions = () => {
+    handleClose();
+    logOutUser();
+  };
 
-  const getText = (items)=>{
-    setText(items)
-    setLiopen(false)
-  }
+  const getText = (items) => {
+    setText(items);
+    setLiopen(false);
+  };
   useEffect(() => {
     getDetailsValidUser();
   });
@@ -124,7 +123,7 @@ const Navbar = () => {
               <MenuIcon style={{ color: "#fff" }} />
             </IconButton>
             <Drawer open={dropen}>
-              <RightHeader LogClose={handledrclose} />
+              <RightHeader LogClose={handledrclose} logOutUser={logOutUser} />
             </Drawer>
             <div className="navlogo">
               <NavLink to="/">
@@ -132,31 +131,43 @@ const Navbar = () => {
               </NavLink>
             </div>
             <div className="nav_searchbaar">
-              <input type="text" name="" id="" placeholder="Search Amazon.in" onChange={(e)=>getText(e.target.value)} />
+              <input
+                type="text"
+                name=""
+                id=""
+                placeholder="Search Amazon.in"
+                onChange={(e) => getText(e.target.value)}
+              />
               <div className="search_icon">
                 <SearchIcon id="search" />
               </div>
 
               {/* Search filter */}
-              {
-                text && 
+              {text && (
                 <List className="extrasearch" hidden={liopen}>
-                  {
-                    products.filter(product =>product.title.longTitle.toLowerCase().includes(text.toLowerCase())).map(product =>(
+                  {products
+                    .filter((product) =>
+                      product.title.longTitle
+                        .toLowerCase()
+                        .includes(text.toLowerCase())
+                    )
+                    .map((product) => (
                       <ListItem>
-                        <NavLink to={`/getproductsone/${product.id}`} onClick={()=>setLiopen(true)}>
-                        {product.title.longTitle}
+                        <NavLink
+                          to={`/getproductsone/${product.id}`}
+                          onClick={() => setLiopen(true)}
+                        >
+                          {product.title.longTitle}
                         </NavLink>
                       </ListItem>
-                    ))
-                  }
+                    ))}
                 </List>
-              }
+              )}
             </div>
           </div>
           <div className="right">
             <div className="nav_btn">
-              <NavLink to="/login">Sign In</NavLink>
+              {!account ? <NavLink to="/login">Sign In</NavLink> : ""}
             </div>
             <div className="cart_btn">
               {account ? (
@@ -206,7 +217,13 @@ const Navbar = () => {
               }}
             >
               <MenuItem onClick={handleClose}>My account</MenuItem>
-              {account ? <MenuItem onClick={logfunctions}><LogoutIcon style={{fontSize:16,marginRight:3}}/> Logout</MenuItem> : ""}
+              {account ? (
+                <MenuItem onClick={logfunctions}>
+                  <LogoutIcon style={{ fontSize: 16, marginRight: 3 }} /> Logout
+                </MenuItem>
+              ) : (
+                ""
+              )}
             </Menu>
           </div>
         </nav>
